@@ -1,0 +1,2268 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Duy ❤️ Thẻo </title>
+  <meta name="description" content="Website lưu giữ kỷ niệm của Duy và Thẻo" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#07070c;
+      --bg2:#0d0d16;
+      --card:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.12);
+      --text:#ffffff;
+      --muted:#d9d9e7;
+      --pink:#ff4fa3;
+      --pink2:#ff87c0;
+      --gold:#ffd27a;
+      --purple:#8c6bff;
+      --shadow:0 20px 60px rgba(0,0,0,.45);
+      --blur: blur(18px);
+      --radius:24px;
+      --max:1200px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:"Be Vietnam Pro",system-ui,-apple-system,sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,79,163,.12), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(140,107,255,.12), transparent 28%),
+        radial-gradient(circle at 50% 80%, rgba(255,210,122,.08), transparent 30%),
+        linear-gradient(180deg, #05050a 0%, #0b0b14 45%, #090912 100%);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    img,video{max-width:100%;display:block}
+    a{text-decoration:none;color:inherit}
+    button{font:inherit}
+
+    /* ===== BACKGROUND FX ===== */
+    #bgCanvas, #fireworksCanvas, #visualizerCanvas {
+      display:block;
+    }
+    #bgCanvas{
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      width:100%;
+      height:100%;
+    }
+    #fireworksCanvas{
+      position:fixed;
+      inset:0;
+      z-index:100;
+      pointer-events:none;
+      width:100%;
+      height:100%;
+    }
+
+    .noise{
+      position:fixed; inset:0; z-index:-2; pointer-events:none;
+      opacity:.08;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.25) 0 1px, transparent 1px),
+        radial-gradient(circle at 70% 60%, rgba(255,255,255,.15) 0 1px, transparent 1px),
+        radial-gradient(circle at 40% 80%, rgba(255,255,255,.18) 0 1px, transparent 1px);
+      background-size: 140px 140px, 180px 180px, 220px 220px;
+      mix-blend-mode: soft-light;
+    }
+
+    .glow-orb{
+      position:fixed;
+      border-radius:50%;
+      filter: blur(60px);
+      opacity:.18;
+      pointer-events:none;
+      z-index:-1;
+      animation: floatOrb 14s ease-in-out infinite alternate;
+    }
+    .orb1{ width:260px;height:260px; background:#ff4fa3; top:8%; left:-60px; }
+    .orb2{ width:220px;height:220px; background:#7a6cff; top:58%; right:-40px; animation-delay: -4s; }
+    .orb3{ width:180px;height:180px; background:#ffd27a; bottom:10%; left:20%; animation-delay: -8s; }
+
+    @keyframes floatOrb{
+      from{ transform: translateY(-10px) translateX(0) scale(1);}
+      to{ transform: translateY(25px) translateX(10px) scale(1.08);}
+    }
+
+    /* ===== LOADER ===== */
+    #loader{
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(circle at center, rgba(255,79,163,.08), transparent 35%),
+        linear-gradient(180deg, #05050a, #0a0a12);
+      transition:.8s ease;
+    }
+    .loader-box{
+      width:min(92vw, 420px);
+      padding:28px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      backdrop-filter: blur(18px);
+      border-radius:28px;
+      box-shadow: var(--shadow);
+      text-align:center;
+    }
+    .loader-heart{
+      font-size:42px;
+      animation: pulseHeart 1.2s infinite;
+      margin-bottom:10px;
+    }
+    @keyframes pulseHeart{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.18)}
+    }
+    .loader-title{
+      font-size:18px;
+      font-weight:700;
+      margin-bottom:14px;
+      color:#fff;
+    }
+    .loader-sub{
+      font-size:13px;
+      color:rgba(255,255,255,.72);
+      margin-bottom:18px;
+    }
+    .loader-bar{
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .loader-fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--pink),var(--gold),var(--purple));
+      border-radius:999px;
+      box-shadow:0 0 25px rgba(255,79,163,.45);
+      transition:width .18s linear;
+    }
+    .loader-percent{
+      margin-top:12px;
+      font-size:14px;
+      font-weight:700;
+      color:var(--pink2);
+      letter-spacing:.08em;
+    }
+    .loader-hide{
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+
+    /* ===== NAV ===== */
+    .nav{
+      position:fixed;
+      top:14px;
+      left:50%;
+      transform:translateX(-50%);
+      width:min(96vw, 1180px);
+      z-index:90;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 16px;
+      border-radius:22px;
+      background:rgba(15,15,24,.58);
+      backdrop-filter: blur(16px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 12px 30px rgba(0,0,0,.28);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:800;
+      font-size:14px;
+      letter-spacing:.04em;
+    }
+    .brand-badge{
+      width:36px;height:36px;border-radius:14px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg, rgba(255,79,163,.24), rgba(140,107,255,.18));
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: inset 0 0 18px rgba(255,255,255,.05);
+    }
+    .nav-links{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .nav-links a{
+      font-size:12px;
+      font-weight:600;
+      padding:10px 14px;
+      border-radius:999px;
+      color:rgba(255,255,255,.82);
+      transition:.25s ease;
+    }
+    .nav-links a:hover{
+      background:rgba(255,255,255,.08);
+      color:#fff;
+    }
+
+    /* ===== COMMON ===== */
+    .container{
+      width:min(100%, var(--max));
+      margin:0 auto;
+      padding:0 18px;
+    }
+
+    .section{
+      padding:80px 0;
+      position:relative;
+    }
+
+    .section-title{
+      text-align:center;
+      margin-bottom:14px;
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight:800;
+      line-height:1.05;
+      letter-spacing:-.02em;
+    }
+    .section-title .script{
+      display:block;
+      font-family:"Dancing Script", cursive;
+      font-size: clamp(34px, 5vw, 72px);
+      color:var(--pink2);
+      font-weight:700;
+      margin-top:6px;
+      text-shadow: 0 0 20px rgba(255,79,163,.22);
+    }
+    .section-sub{
+      max-width:760px;
+      margin:0 auto 32px;
+      text-align:center;
+      color:rgba(255,255,255,.74);
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    .glass{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:14px 18px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      cursor:pointer;
+      transition:.28s ease;
+      font-weight:700;
+      font-size:14px;
+      min-height:48px;
+    }
+    .btn:hover{
+      transform:translateY(-2px);
+      background:rgba(255,255,255,.12);
+    }
+    .btn-primary{
+      background:linear-gradient(135deg, rgba(255,79,163,.95), rgba(255,135,192,.95));
+      border-color:rgba(255,255,255,.12);
+      box-shadow:0 14px 30px rgba(255,79,163,.28);
+    }
+    .btn-gold{
+      background:linear-gradient(135deg, rgba(255,210,122,.92), rgba(255,176,64,.92));
+      color:#23160b;
+      border-color:rgba(255,255,255,.18);
+      box-shadow:0 14px 30px rgba(255,210,122,.22);
+    }
+
+    /* ===== HERO ===== */
+    .hero{
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      padding:110px 0 30px;
+      position:relative;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:24px;
+      align-items:center;
+    }
+
+    .hero-left{
+      position:relative;
+      z-index:2;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.05);
+      color:rgba(255,255,255,.8);
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:16px;
+    }
+
+    .hero-title{
+      font-size: clamp(40px, 7vw, 92px);
+      line-height:.96;
+      font-weight:800;
+      letter-spacing:-.04em;
+      margin-bottom:14px;
+      text-shadow: 0 8px 35px rgba(0,0,0,.38);
+    }
+    .hero-title .love{
+      display:block;
+      font-family:"Dancing Script", cursive;
+      font-size: clamp(44px, 8vw, 108px);
+      color:var(--pink2);
+      font-weight:700;
+      margin-top:8px;
+    }
+
+    .typing-wrap{
+      min-height:64px;
+      margin:10px 0 18px;
+    }
+    .typing-text{
+      font-size: clamp(15px, 2vw, 18px);
+      color:rgba(255,255,255,.84);
+      line-height:1.8;
+      max-width:680px;
+    }
+    .typing-cursor{
+      display:inline-block;
+      width:10px;
+      animation: blink 1s infinite;
+      color:var(--pink2);
+      font-weight:800;
+    }
+    @keyframes blink{
+      0%,49%{opacity:1}
+      50%,100%{opacity:0}
+    }
+
+    .hero-meta{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:12px;
+      margin:20px 0 22px;
+    }
+    .meta-card{
+      padding:16px;
+      border-radius:22px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: inset 0 0 25px rgba(255,255,255,.02);
+    }
+    .meta-label{
+      font-size:11px;
+      color:rgba(255,255,255,.58);
+      margin-bottom:8px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:700;
+    }
+    .meta-value{
+      font-size:14px;
+      font-weight:800;
+      line-height:1.45;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .hero-right{
+      position:relative;
+      min-height:560px;
+    }
+
+    .hero-card{
+      position:relative;
+      border-radius:30px;
+      overflow:hidden;
+      height:560px;
+      background:#111;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);
+      transition: transform .4s ease;
+    }
+    .hero-card:hover{
+      transform: perspective(1200px) rotateY(-1deg) rotateX(0deg) translateY(-4px);
+    }
+
+    .hero-slides{
+      position:absolute; inset:0;
+    }
+    .hero-slide{
+      position:absolute; inset:0;
+      opacity:0;
+      transition:1s ease;
+      transform:scale(1.06);
+    }
+    .hero-slide.active{
+      opacity:1;
+      transform:scale(1);
+    }
+    .hero-slide img{
+      width:100%; height:100%; object-fit:cover;
+      filter: brightness(.82) saturate(1.08);
+    }
+    .hero-overlay{
+      position:absolute; inset:0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.35) 55%, rgba(0,0,0,.72) 100%),
+        radial-gradient(circle at 70% 20%, rgba(255,79,163,.18), transparent 28%);
+    }
+    .hero-badge{
+      position:absolute;
+      left:18px; right:18px; bottom:18px;
+      padding:16px;
+      border-radius:22px;
+      background:rgba(255,255,255,.08);
+      backdrop-filter: blur(16px);
+      border:1px solid rgba(255,255,255,.1);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .hero-badge-title{
+      font-weight:800;
+      font-size:16px;
+    }
+    .hero-badge-sub{
+      font-size:12px;
+      color:rgba(255,255,255,.72);
+      margin-top:4px;
+    }
+
+    /* ===== LOVE MAP ===== */
+    .love-map-wrap{
+      margin-top:20px;
+    }
+    .love-map{
+      border-radius:30px;
+      padding:22px;
+      position:relative;
+      overflow:hidden;
+    }
+    .map-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+    .map-head h3{
+      font-size:22px;
+      font-weight:800;
+    }
+    .map-head p{
+      font-size:13px;
+      color:rgba(255,255,255,.72);
+    }
+
+    .map-area{
+      position:relative;
+      height:240px;
+      border-radius:24px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.05), transparent 40%),
+        linear-gradient(135deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .map-grid{
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity:.35;
+    }
+
+    .city{
+      position:absolute;
+      transform:translate(-50%,-50%);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:8px;
+      z-index:2;
+    }
+    .city-dot{
+      width:16px;height:16px;border-radius:50%;
+      background: radial-gradient(circle at 35% 35%, #fff, var(--pink));
+      box-shadow:0 0 0 8px rgba(255,79,163,.08), 0 0 22px rgba(255,79,163,.55);
+    }
+    .city-label{
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:12px;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .flight-line{
+      position:absolute;
+      left:22%;
+      top:28%;
+      width:56%;
+      height:42%;
+      border-top:3px dashed rgba(255,210,122,.75);
+      border-right:3px dashed rgba(255,210,122,.75);
+      border-top-right-radius:260px;
+      transform: rotate(8deg);
+      filter: drop-shadow(0 0 10px rgba(255,210,122,.28));
+      opacity:.9;
+    }
+
+    .plane{
+      position:absolute;
+      left:24%;
+      top:33%;
+      font-size:26px;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,.28));
+      animation: flyPlane 8s ease-in-out infinite;
+      z-index:3;
+      transform-origin:center;
+    }
+    @keyframes flyPlane{
+      0%   { left:24%; top:33%; transform: rotate(15deg) scale(1); }
+      25%  { left:38%; top:24%; transform: rotate(8deg) scale(1.02); }
+      50%  { left:54%; top:22%; transform: rotate(2deg) scale(1.03); }
+      75%  { left:68%; top:30%; transform: rotate(-8deg) scale(1.02); }
+      100% { left:78%; top:46%; transform: rotate(-18deg) scale(1); }
+    }
+
+    .trail{
+      position:absolute;
+      width:12px;height:12px;border-radius:50%;
+      background:rgba(255,210,122,.75);
+      filter: blur(1px);
+      box-shadow:0 0 16px rgba(255,210,122,.45);
+      animation: trailBlink 1.4s infinite alternate;
+    }
+    @keyframes trailBlink{
+      from{opacity:.2; transform:scale(.7)}
+      to{opacity:.8; transform:scale(1)}
+    }
+
+    /* ===== TIMELINE ===== */
+    .timeline{
+      position:relative;
+      max-width:900px;
+      margin:0 auto;
+      padding:14px 0;
+    }
+    .timeline::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:0;
+      transform:translateX(-50%);
+      width:3px;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,79,163,.2), rgba(255,210,122,.6), rgba(140,107,255,.3));
+      box-shadow:0 0 18px rgba(255,79,163,.18);
+    }
+
+    .timeline-item{
+      position:relative;
+      width:50%;
+      padding:16px 18px;
+      margin:14px 0;
+    }
+    .timeline-item.left{ left:0; padding-right:36px; }
+    .timeline-item.right{ left:50%; padding-left:36px; }
+
+    .timeline-card{
+      border-radius:24px;
+      padding:18px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      position:relative;
+      transition:.35s ease;
+    }
+    .timeline-card:hover{ transform:translateY(-4px); }
+
+    .timeline-item::after{
+      content:"";
+      position:absolute;
+      top:28px;
+      width:16px;height:16px;border-radius:50%;
+      background: radial-gradient(circle at 35% 35%, #fff, var(--pink));
+      box-shadow:0 0 0 8px rgba(255,79,163,.08), 0 0 22px rgba(255,79,163,.35);
+      z-index:2;
+    }
+    .timeline-item.left::after{ right:-8px; }
+    .timeline-item.right::after{ left:-8px; }
+
+    .time-tag{
+      display:inline-block;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.06em;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--gold);
+      margin-bottom:10px;
+    }
+    .timeline-title{
+      font-size:18px;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+    .timeline-text{
+      color:rgba(255,255,255,.74);
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    /* ===== GALLERY ===== */
+    .gallery-shell{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:14px;
+      grid-auto-rows: 86px;
+    }
+
+    .gallery-item{
+      position:relative;
+      overflow:hidden;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.08);
+      background:#111;
+      cursor:pointer;
+      box-shadow: var(--shadow);
+      transform-style: preserve-3d;
+      transition: transform .35s ease, box-shadow .35s ease;
+    }
+    .gallery-item:hover{
+      transform: translateY(-4px) rotateX(2deg) rotateY(-2deg);
+      box-shadow:0 24px 60px rgba(0,0,0,.45);
+    }
+    .gallery-item img{
+      width:100%;height:100%;
+      object-fit:cover;
+      transition: transform .6s ease, filter .6s ease;
+      filter: brightness(.9) saturate(1.06);
+    }
+    .gallery-item:hover img{
+      transform:scale(1.08);
+      filter: brightness(1) saturate(1.12);
+    }
+    .gallery-item::after{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(180deg, transparent, rgba(0,0,0,.32));
+      pointer-events:none;
+    }
+
+    /* 9 ô layout xịn */
+    .g1{ grid-column: span 5; grid-row: span 3; }
+    .g2{ grid-column: span 3; grid-row: span 2; }
+    .g3{ grid-column: span 4; grid-row: span 2; }
+    .g4{ grid-column: span 4; grid-row: span 2; }
+    .g5{ grid-column: span 3; grid-row: span 3; }
+    .g6{ grid-column: span 5; grid-row: span 2; }
+    .g7{ grid-column: span 4; grid-row: span 2; }
+    .g8{ grid-column: span 4; grid-row: span 2; }
+    .g9{ grid-column: span 4; grid-row: span 2; }
+
+    /* ===== 3D CAROUSEL ===== */
+    .carousel-wrap{
+      margin-top:32px;
+      display:grid;
+      place-items:center;
+      min-height:340px;
+      perspective:1200px;
+    }
+    .carousel{
+      position:relative;
+      width:260px;
+      height:260px;
+      transform-style: preserve-3d;
+      animation: spinCarousel 18s linear infinite;
+    }
+    @keyframes spinCarousel{
+      from{ transform: rotateY(0deg); }
+      to{ transform: rotateY(360deg); }
+    }
+    .carousel.paused{ animation-play-state: paused; }
+    .carousel-card{
+      position:absolute;
+      inset:0;
+      border-radius:22px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+      background:#111;
+    }
+    .carousel-card img{
+      width:100%;height:100%;object-fit:cover;
+    }
+
+    /* ===== VIDEOS ===== */
+    .video-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:18px;
+    }
+    .video-card{
+      border-radius:24px;
+      overflow:hidden;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+    }
+    .video-head{
+      padding:14px 14px 0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+    }
+    .video-title{
+      font-size:14px;
+      font-weight:800;
+    }
+    .video-badge{
+      font-size:11px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--pink2);
+      font-weight:700;
+    }
+    .video-wrap{
+      padding:14px;
+    }
+    .video-wrap video{
+      width:100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+      border-radius:18px;
+      background:#000;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    /* ===== MUSIC ===== */
+    .music-card{
+      border-radius:30px;
+      padding:20px;
+      position:relative;
+      overflow:hidden;
+    }
+    .music-grid{
+      display:grid;
+      grid-template-columns: 340px 1fr;
+      gap:20px;
+      align-items:stretch;
+    }
+    .album-box{
+      border-radius:24px;
+      overflow:hidden;
+      background:#111;
+      border:1px solid rgba(255,255,255,.08);
+      position:relative;
+      min-height:320px;
+      box-shadow: var(--shadow);
+    }
+    .album-box img{
+      width:100%;height:100%;object-fit:cover;
+      filter: brightness(.85);
+    }
+    .album-overlay{
+      position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.65));
+    }
+    .album-info{
+      position:absolute;
+      left:16px; right:16px; bottom:16px;
+      display:flex; justify-content:space-between; gap:10px; align-items:flex-end;
+    }
+    .album-title{
+      font-size:20px; font-weight:800;
+    }
+    .album-sub{
+      font-size:12px; color:rgba(255,255,255,.7); margin-top:4px;
+    }
+
+    .player{
+      border-radius:24px;
+      padding:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      min-height:320px;
+    }
+    .track-title{
+      font-size:22px;
+      font-weight:800;
+    }
+    .track-sub{
+      font-size:13px;
+      color:rgba(255,255,255,.68);
+    }
+    .progress-wrap{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .time{
+      font-size:12px;
+      color:rgba(255,255,255,.66);
+      min-width:42px;
+    }
+    .progress{
+      flex:1;
+      height:8px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+      cursor:pointer;
+      position:relative;
+    }
+    .progress-fill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--pink),var(--gold));
+      border-radius:999px;
+      box-shadow:0 0 18px rgba(255,79,163,.3);
+    }
+
+    .controls{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .icon-btn{
+      width:48px;height:48px;border-radius:50%;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      display:grid;place-items:center;
+      cursor:pointer;
+      transition:.25s ease;
+      font-size:18px;
+    }
+    .icon-btn:hover{
+      transform:translateY(-2px);
+      background:rgba(255,255,255,.12);
+    }
+    .icon-btn.main{
+      width:58px;height:58px;
+      background:linear-gradient(135deg, rgba(255,79,163,.95), rgba(255,135,192,.95));
+      box-shadow:0 14px 30px rgba(255,79,163,.25);
+      font-size:22px;
+    }
+
+    .playlist{
+      display:grid;
+      gap:8px;
+      margin-top:4px;
+    }
+    .track-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.06);
+      background:rgba(255,255,255,.04);
+      cursor:pointer;
+      transition:.25s ease;
+    }
+    .track-item:hover{
+      background:rgba(255,255,255,.08);
+    }
+    .track-item.active{
+      border-color:rgba(255,79,163,.28);
+      background:rgba(255,79,163,.08);
+    }
+    .track-left{
+      min-width:0;
+    }
+    .track-name{
+      font-size:14px;
+      font-weight:800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .track-artist{
+      font-size:12px;
+      color:rgba(255,255,255,.62);
+      margin-top:3px;
+    }
+    .lyrics-box{
+      margin-top:8px;
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:rgba(255,255,255,.78);
+      font-size:13px;
+      line-height:1.8;
+      min-height:80px;
+    }
+
+    #visualizerCanvas{
+      width:100%;
+      height:90px;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+    }
+
+    /* ===== LETTER ===== */
+    .letter-card{
+      border-radius:30px;
+      padding:26px;
+      position:relative;
+      overflow:hidden;
+    }
+    .letter-preview{
+      display:grid;
+      grid-template-columns: .95fr 1.05fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .letter-left{
+      border-radius:24px;
+      overflow:hidden;
+      position:relative;
+      min-height:320px;
+      background:#111;
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .letter-left img{
+      width:100%;height:100%;object-fit:cover;
+      filter: brightness(.86);
+    }
+    .letter-left::after{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.55));
+    }
+    .letter-quote{
+      position:absolute;
+      left:16px; right:16px; bottom:16px;
+      z-index:2;
+      font-family:"Dancing Script", cursive;
+      font-size:28px;
+      line-height:1.25;
+      color:#fff;
+      text-shadow:0 6px 20px rgba(0,0,0,.35);
+    }
+
+    .letter-right{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:14px;
+      padding:8px;
+    }
+    .letter-right h3{
+      font-size:30px;
+      font-weight:800;
+    }
+    .letter-right p{
+      color:rgba(255,255,255,.74);
+      line-height:1.85;
+      font-size:14px;
+    }
+
+    /* ===== MODAL ===== */
+    .modal{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background:rgba(3,3,8,.75);
+      backdrop-filter: blur(10px);
+      z-index:200;
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transition:.3s ease;
+    }
+    .modal.show{
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+    }
+
+    .image-modal-box{
+      width:min(100%, 1100px);
+      max-height:92vh;
+      border-radius:28px;
+      overflow:hidden;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      position:relative;
+    }
+    .image-modal-box img{
+      width:100%;
+      max-height:92vh;
+      object-fit:contain;
+      background:#000;
+    }
+
+    .letter-modal-box{
+      width:min(100%, 760px);
+      border-radius:28px;
+      padding:24px;
+      background:rgba(18,18,28,.92);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .letter-modal-box::before{
+      content:"";
+      position:absolute;
+      inset:-40% auto auto -20%;
+      width:260px;height:260px;border-radius:50%;
+      background:radial-gradient(circle, rgba(255,79,163,.18), transparent 60%);
+      filter: blur(8px);
+    }
+    .modal-close{
+      position:absolute;
+      top:12px; right:12px;
+      width:42px;height:42px;border-radius:50%;
+      border:none;
+      background:rgba(255,255,255,.08);
+      color:#fff;
+      cursor:pointer;
+      font-size:18px;
+    }
+    .letter-modal-title{
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight:800;
+      margin-bottom:8px;
+    }
+    .letter-modal-script{
+      font-family:"Dancing Script", cursive;
+      color:var(--pink2);
+      font-size: clamp(30px, 5vw, 58px);
+      margin-bottom:18px;
+    }
+    .letter-modal-content{
+      color:rgba(255,255,255,.82);
+      line-height:2;
+      font-size:15px;
+      white-space:pre-line;
+    }
+
+    /* ===== FOOTER ===== */
+    footer{
+      padding:50px 0 90px;
+      text-align:center;
+      color:rgba(255,255,255,.6);
+      font-size:13px;
+    }
+    .footer-love{
+      font-family:"Dancing Script", cursive;
+      font-size:34px;
+      color:var(--pink2);
+      margin-bottom:8px;
+    }
+
+    /* ===== FLOAT BUTTON ===== */
+    .float-top{
+      position:fixed;
+      right:14px;
+      bottom:14px;
+      z-index:80;
+      width:52px;height:52px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.08);
+      backdrop-filter: blur(14px);
+      color:#fff;
+      display:grid;place-items:center;
+      cursor:pointer;
+      box-shadow:0 12px 28px rgba(0,0,0,.25);
+      transition:.25s ease;
+    }
+    .float-top:hover{ transform:translateY(-3px); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1100px){
+      .hero-grid,
+      .music-grid,
+      .letter-preview{
+        grid-template-columns: 1fr;
+      }
+      .hero-right{ min-height:auto; }
+      .hero-card{ height:500px; transform:none; }
+      .video-grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 860px){
+      .nav{
+        top:10px;
+        padding:10px 12px;
+      }
+      .nav-links{
+        display:none;
+      }
+      .hero{
+        padding-top:92px;
+      }
+      .hero-meta{
+        grid-template-columns:1fr;
+      }
+
+      .timeline::before{
+        left:14px;
+        transform:none;
+      }
+      .timeline-item,
+      .timeline-item.left,
+      .timeline-item.right{
+        width:100%;
+        left:0;
+        padding-left:42px;
+        padding-right:0;
+      }
+      .timeline-item::after,
+      .timeline-item.left::after,
+      .timeline-item.right::after{
+        left:6px;
+        right:auto;
+      }
+
+      .gallery-shell{
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 120px;
+      }
+      .g1,.g2,.g3,.g4,.g5,.g6,.g7,.g8,.g9{
+        grid-column: span 1;
+        grid-row: span 1;
+      }
+      .g1,.g5{
+        grid-row: span 2;
+      }
+
+      .video-grid{ grid-template-columns: 1fr; }
+
+      .map-area{ height:210px; }
+
+      .hero-card{ height:420px; }
+    }
+
+    @media (max-width: 520px){
+      .section{ padding:64px 0; }
+      .hero-title{ font-size: clamp(34px, 12vw, 62px); }
+      .hero-title .love{ font-size: clamp(38px, 13vw, 72px); }
+      .hero-card{ height:360px; border-radius:24px; }
+      .hero-badge{ padding:12px; border-radius:18px; }
+      .hero-badge-title{ font-size:14px; }
+      .music-card,
+      .letter-card,
+      .love-map{
+        border-radius:24px;
+      }
+      .album-box{ min-height:260px; }
+      .player{ min-height:auto; }
+      .carousel-wrap{ min-height:280px; }
+      .carousel{ width:210px; height:210px; }
+      .section-sub{ font-size:13px; }
+      .btn{ width:100%; }
+      .hero-actions{ flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FX -->
+  <canvas id="bgCanvas"></canvas>
+  <canvas id="fireworksCanvas"></canvas>
+  <div class="noise"></div>
+  <div class="glow-orb orb1"></div>
+  <div class="glow-orb orb2"></div>
+  <div class="glow-orb orb3"></div>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-box">
+      <div class="loader-heart">💖</div>
+      <div class="loader-title">Đang mở hộp kỷ niệm của Duy & Thẻo</div>
+      <div class="loader-sub"> kỷ niệm của tình yêu...</div>
+      <div class="loader-bar">
+        <div class="loader-fill" id="loaderFill"></div>
+      </div>
+      <div class="loader-percent" id="loaderPercent">0%</div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="brand">
+      <div class="brand-badge">💖</div>
+      <span>DUY × THẺO</span>
+    </div>
+    <div class="nav-links">
+      <a href="#hero">Trang đầu</a>
+      <a href="#map">Hành trình</a>
+      <a href="#timeline">Kỷ niệm</a>
+      <a href="#gallery">Ảnh</a>
+      <a href="#videos">Video</a>
+      <a href="#music">Nhạc</a>
+      <a href="#letter">Thư tình</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="container hero-grid">
+      <div class="hero-left">
+        <div class="eyebrow">✨LUXURY LOVE MEMORY</div>
+        <h1 class="hero-title">
+          Duy ❤️ Thẻo
+          <span class="love">Một nơi để giữ tất cả yêu thương</span>
+        </h1>
+
+        <div class="typing-wrap">
+          <div class="typing-text" id="typingText"></div>
+        </div>
+
+        <div class="hero-meta">
+          <div class="meta-card">
+            <div class="meta-label">Ngày bắt đầu thích nhau</div>
+            <div class="meta-value">20 / 01 / 2026</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Chuyến bay yêu thương</div>
+            <div class="meta-value">Hà Nội ✈ Sài Gòn</div>
+          </div>
+          <div class="meta-card">
+            <div class="meta-label">Ngày em vào Sài Gòn</div>
+            <div class="meta-value">10 / 02 / 2026</div>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="#gallery" class="btn btn-primary">📸 Xem kỷ niệm</a>
+          <button class="btn btn-gold" id="openLetterBtn">💌 Mở thư tình</button>
+          <button class="btn" id="fireBtn">🎆 Pháo hoa cho em</button>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-card">
+          <div class="hero-slides" id="heroSlides">
+            <div class="hero-slide active"><img src="assets/images/cover.jpg" alt="Duy và Thẻo 1"></div>
+            <div class="hero-slide"><img src="assets/images/anh2.jpg" alt="Duy và Thẻo 2"></div>
+            <div class="hero-slide"><img src="assets/images/anh3.jpg" alt="Duy và Thẻo 3"></div>
+            <div class="hero-slide"><img src="assets/images/anh4.jpg" alt="Duy và Thẻo 4"></div>
+            <div class="hero-slide"><img src="assets/images/anh5.jpg" alt="Duy và Thẻo 5"></div>
+            <div class="hero-slide"><img src="assets/images/anh6.jpg" alt="Duy và Thẻo 6"></div>
+            <div class="hero-slide"><img src="assets/images/anh7.jpg" alt="Duy và Thẻo 7"></div>
+            <div class="hero-slide"><img src="assets/images/anh8.jpg" alt="Duy và Thẻo 8"></div>
+          </div>
+          <div class="hero-overlay"></div>
+          <div class="hero-badge">
+            <div>
+              <div class="hero-badge-title">Duy & Thẻo </div>
+              <div class="hero-badge-sub"> nhạc tình yêu • lưu giữ kỷ niệm</div>
+            </div>
+            <div class="btn" style="padding:10px 14px;font-size:12px;">💖 FOREVER</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOVE MAP -->
+  <section class="section" id="map">
+    <div class="container">
+      <h2 class="section-title">
+        Hành trình yêu thương
+        <span class="script">Từ Hà Nội đến Sài Gòn</span>
+      </h2>
+      <p class="section-sub">
+        Không chỉ là một chuyến bay, mà là một hành trình khiến trái tim anh nhớ mãi.
+        Ngày em từ Hà Nội vào Sài Gòn, mọi thứ bỗng đẹp hơn rất nhiều.
+      </p>
+
+      <div class="love-map glass love-map-wrap">
+        <div class="map-head">
+          <div>
+            <h3>Hà Nội ✈ Sài Gòn</h3>
+            <p>Ngày đặc biệt: 10/02/2026</p>
+          </div>
+          <button class="btn" id="replayFlight">✈ Chạy lại chuyến bay</button>
+        </div>
+
+        <div class="map-area">
+          <div class="map-grid"></div>
+
+          <div class="city" style="left:20%; top:28%;">
+            <div class="city-dot"></div>
+            <div class="city-label">Hà Nội • Nơi em ở</div>
+          </div>
+
+          <div class="flight-line"></div>
+
+          <div class="trail" style="left:33%; top:26%; animation-delay:0s;"></div>
+          <div class="trail" style="left:45%; top:22%; animation-delay:.3s;"></div>
+          <div class="trail" style="left:58%; top:24%; animation-delay:.6s;"></div>
+          <div class="trail" style="left:69%; top:32%; animation-delay:.9s;"></div>
+
+          <div class="plane" id="plane">✈️</div>
+
+          <div class="city" style="left:80%; top:48%;">
+            <div class="city-dot" style="background: radial-gradient(circle at 35% 35%, #fff, #ffd27a); box-shadow:0 0 0 8px rgba(255,210,122,.08), 0 0 22px rgba(255,210,122,.45);"></div>
+            <div class="city-label">Sài Gòn • Nơi anh chờ em</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="section" id="timeline">
+    <div class="container">
+      <h2 class="section-title">
+        Những cột mốc đẹp nhất
+        <span class="script">Timeline của tụi mình</span>
+      </h2>
+      <p class="section-sub">
+        Có những ngày nhìn lại, mới thấy chỉ vài cột mốc thôi nhưng lại đủ để tim mình nhớ rất lâu.
+      </p>
+
+      <div class="timeline">
+        <div class="timeline-item left">
+          <div class="timeline-card">
+            <div class="time-tag">20 / 01 / 2026</div>
+            <div class="timeline-title">Ngày bắt đầu thích nhau</div>
+            <div class="timeline-text">
+              Đây là ngày mọi thứ bắt đầu. Từ hôm đó, anh biết rằng em là người khiến anh để ý,
+              khiến ngày thường bỗng trở nên đặc biệt hơn.
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item right">
+          <div class="timeline-card">
+            <div class="time-tag">10 / 02 / 2026</div>
+            <div class="timeline-title">Em từ Hà Nội bay vào Sài Gòn</div>
+            <div class="timeline-text">
+              Chuyến bay ấy không chỉ là khoảng cách địa lý được rút ngắn, mà còn là ngày trái tim anh
+              cảm thấy gần Thẻo hơn bao giờ hết.
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item left">
+          <div class="timeline-card">
+            <div class="time-tag">NOW</div>
+            <div class="timeline-title">Vẫn muốn giữ lại tất cả kỷ niệm</div>
+            <div class="timeline-text">
+              Và vì thế nên anh tạo ra web này — như một nơi để cất ảnh, video,và những điều đẹp nhất
+              của anh và Thẻo  vào cùng một chỗ. Anh hy vọng sẻ có nhiều nhánh iu iu
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="section" id="gallery">
+    <div class="container">
+      <h2 class="section-title">
+        Kho ảnh kỷ niệm
+        <span class="script">9 ô gallery luxury</span>
+      </h2>
+      <p class="section-sub">
+        
+      </p>
+
+      <div class="gallery-shell">
+        <div class="gallery-item g1" data-img="assets/images/anh1.jpg"><img src="assets/images/anh1.jpg" alt="Ảnh 1"></div>
+        <div class="gallery-item g2" data-img="assets/images/anh2.jpg"><img src="assets/images/anh2.jpg" alt="Ảnh 2"></div>
+        <div class="gallery-item g3" data-img="assets/images/anh3.jpg"><img src="assets/images/anh3.jpg" alt="Ảnh 3"></div>
+        <div class="gallery-item g4" data-img="assets/images/anh4.jpg"><img src="assets/images/anh4.jpg" alt="Ảnh 4"></div>
+        <div class="gallery-item g5" data-img="assets/images/anh5.jpg"><img src="assets/images/anh5.jpg" alt="Ảnh 5"></div>
+        <div class="gallery-item g6" data-img="assets/images/anh1.jpg"><img src="assets/images/anh6.jpg" alt="Ảnh 6"></div>
+        <div class="gallery-item g7" data-img="assets/images/anh2.jpg"><img src="assets/images/anh7.jpg" alt="Ảnh 7"></div>
+        <div class="gallery-item g8" data-img="assets/images/anh3.jpg"><img src="assets/images/anh8.jpg" alt="Ảnh 8"></div>
+        <div class="gallery-item g9" data-img="assets/images/anh4.jpg"><img src="assets/images/cover.jpg" alt="Ảnh 9"></div>
+      </div>
+
+      <div class="carousel-wrap">
+        <div class="carousel" id="carousel3d">
+          <div class="carousel-card" style="transform: rotateY(0deg) translateZ(360px);"><img src="assets/images/cover.jpg" alt=""></div>
+          <div class="carousel-card" style="transform: rotateY(72deg) translateZ(360px);"><img src="assets/images/anh2.jpg" alt=""></div>
+          <div class="carousel-card" style="transform: rotateY(144deg) translateZ(360px);"><img src="assets/images/anh3.jpg" alt=""></div>
+          <div class="carousel-card" style="transform: rotateY(216deg) translateZ(360px);"><img src="assets/images/anh4.jpg" alt=""></div>
+          <div class="carousel-card" style="transform: rotateY(288deg) translateZ(360px);"><img src="assets/images/anh5.jpg" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEOS -->
+  <section class="section" id="videos">
+    <div class="container">
+      <h2 class="section-title">
+        Video kỷ niệm
+        <span class="script">5 khoảnh khắc đáng nhớ</span>
+      </h2>
+      <p class="section-sub">
+        Chỉ cần bấm phát là xem được. Nếu video dọc thì tôi đã tối ưu card kiểu cinematic mobile-friendly để nhìn đẹp hơn.
+      </p>
+
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-head">
+            <div class="video-title">Khoảnh khắc 01</div>
+            <div class="video-badge">MEMORY</div>
+          </div>
+          <div class="video-wrap"><video controls playsinline preload="metadata" src="assets/videos/video1.mp4"></video></div>
+        </div>
+
+        <div class="video-card">
+          <div class="video-head">
+            <div class="video-title">Khoảnh khắc 02</div>
+            <div class="video-badge">LOVE</div>
+          </div>
+          <div class="video-wrap"><video controls playsinline preload="metadata" src="assets/videos/video2.mp4"></video></div>
+        </div>
+
+        <div class="video-card">
+          <div class="video-head">
+            <div class="video-title">Khoảnh khắc 03</div>
+            <div class="video-badge">CINEMA</div>
+          </div>
+          <div class="video-wrap"><video controls playsinline preload="metadata" src="assets/videos/video3.mp4"></video></div>
+        </div>
+
+        <div class="video-card">
+          <div class="video-head">
+            <div class="video-title">Khoảnh khắc 04</div>
+            <div class="video-badge">FOREVER</div>
+          </div>
+          <div class="video-wrap"><video controls playsinline preload="metadata" src="assets/videos/video4.mp4"></video></div>
+        </div>
+
+        <div class="video-card">
+          <div class="video-head">
+            <div class="video-title">Khoảnh khắc 05</div>
+            <div class="video-badge">US</div>
+          </div>
+          <div class="video-wrap"><video controls playsinline preload="metadata" src="assets/videos/video5.mp4"></video></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MUSIC -->
+  <section class="section" id="music">
+    <div class="container">
+      <h2 class="section-title">
+        Những bài hát của tụi mình
+        <span class="script">Music player hehe</span>
+      </h2>
+      <p class="section-sub">
+   
+      </p>
+
+      <div class="music-card glass">
+        <div class="music-grid">
+          <div class="album-box">
+            <img id="albumCover" src="assets/images/cover.jpg" alt="Album cover">
+            <div class="album-overlay"></div>
+            <div class="album-info">
+              <div>
+                <div class="album-title">Duy & Thẻo Playlist</div>
+                <div class="album-sub">Một playlist chỉ dành cho hai đứa</div>
+              </div>
+              <button class="btn btn-primary" id="albumPlayBtn">▶ Play</button>
+            </div>
+          </div>
+
+          <div class="player">
+            <div>
+              <div class="track-title" id="trackTitle">Hơn Cả Yêu</div>
+              <div class="track-sub" id="trackArtist">Bài hát mở đầu cho cảm xúc</div>
+            </div>
+
+            <canvas id="visualizerCanvas" width="800" height="120"></canvas>
+
+            <div class="progress-wrap">
+              <div class="time" id="currentTime">0:00</div>
+              <div class="progress" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <div class="time" id="durationTime">0:00</div>
+            </div>
+
+            <div class="controls">
+              <button class="icon-btn" id="prevBtn">⏮</button>
+              <button class="icon-btn main" id="playBtn">▶</button>
+              <button class="icon-btn" id="nextBtn">⏭</button>
+              <button class="btn" id="muteBtn">🔊 Âm thanh</button>
+            </div>
+
+            <div class="playlist" id="playlist"></div>
+
+            <div class="lyrics-box" id="lyricsBox">
+              Khi yêu rồi, những ngày bình thường cũng thành điều đáng nhớ...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <audio id="audio"></audio>
+    </div>
+  </section>
+
+  <!-- LETTER -->
+  <section class="section" id="letter">
+    <div class="container">
+      <h2 class="section-title">
+        Lá thư dành cho em
+        <span class="script">Một góc rất riêng của tụi mình</span>
+      </h2>
+      <p class="section-sub">
+        Không cần quá dài, chỉ cần đủ thật lòng là được.
+      </p>
+
+      <div class="letter-card glass">
+        <div class="letter-preview">
+          <div class="letter-left">
+            <img src="assets/images/cover.jpg" alt="Thư tình">
+            <div class="letter-quote">“Từ ngày có em, mọi thứ trong anh dịu lại...”</div>
+          </div>
+
+          <div class="letter-right">
+            <h3>Gửi Thẻo 💖</h3>
+            <p>
+              Có lẽ điều đẹp nhất không phải là một ngày nào đó thật đặc biệt,
+              mà là từ khi em xuất hiện, những ngày bình thường của anh cũng trở nên đáng nhớ.
+            </p>
+            <p>
+              Anh giữ lại những tấm ảnh, những video, những bài hát...
+              vì anh muốn sau này nhìn lại, tụi mình vẫn còn thấy rõ cảm giác đã từng thương nhau nhiều đến thế nào.
+            </p>
+            <button class="btn btn-primary" id="openLetterSectionBtn">💌 Mở toàn bộ thư tình</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-love">Duy ❤️ Thẻo</div>
+    <div>i love you</div>
+  </footer>
+
+  <button class="float-top" id="scrollTopBtn">↑</button>
+
+  <!-- IMAGE MODAL -->
+  <div class="modal" id="imageModal">
+    <div class="image-modal-box">
+      <button class="modal-close" data-close="imageModal">✕</button>
+      <img id="modalImage" src="" alt="Ảnh phóng to">
+    </div>
+  </div>
+
+  <!-- LETTER MODAL -->
+  <div class="modal" id="letterModal">
+    <div class="letter-modal-box">
+      <button class="modal-close" data-close="letterModal">✕</button>
+      <div class="letter-modal-title">Gửi Thẻo</div>
+      <div class="letter-modal-script">Từ Duy, bằng tất cả yêu thương</div>
+      <div class="letter-modal-content">
+Thẻo à,
+
+Anh không biết sau này tụi mình sẽ đi xa đến đâu,
+nhưng anh biết chắc một điều:
+
+Từ ngày 20/01/2026,
+khi tụi mình bắt đầu thích nhau,
+trong anh đã có một điều gì đó rất khác.
+
+Rồi đến ngày 10/02/2026,
+khi em từ Hà Nội bay vào Sài Gòn,
+anh càng thấy rằng...
+có những người chỉ cần xuất hiện thôi,
+cũng đủ làm tim mình dịu lại.
+
+Anh làm website này không phải để khoe điều gì,
+mà chỉ muốn giữ lại những thứ đẹp nhất của tụi mình:
+mấy tấm ảnh,
+mấy đoạn video,
+mấy bài hát,
+và cả những cảm xúc mà đôi khi anh không nói hết bằng lời.
+
+Nếu sau này có lúc em mở lại trang này,
+anh mong em sẽ nhớ:
+đã từng có một người rất trân trọng em,
+rất muốn lưu lại từng khoảnh khắc với em,
+và thật lòng thương em rất nhiều.
+
+— Duy 💖
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ===============================
+       CONFIG
+    =============================== */
+    const heroImages = [
+      "assets/images/anh1.jpg",
+      "assets/images/anh2.jpg",
+      "assets/images/anh3.jpg",
+      "assets/images/anh4.jpg",
+      "assets/images/anh5.jpg"
+    ];
+
+    const tracks = [
+      {
+        title: "Hơn Cả Yêu",
+        artist: "Playlist của Duy & Thẻo",
+        src: "assets/music/hon-ca-yeu.mp3",
+        cover: "assets/images/anh2.jpg",
+        lyrics: "Hơn cả yêu là khi chỉ cần nhớ đến nhau thôi, tim cũng thấy dịu lại..."
+      },
+      {
+        title: "Nơi Này Có Anh",
+        artist: "Playlist của Duy & Thẻo",
+        src: "assets/music/noi-nay-co-anh.mp3",
+        cover: "assets/images/anh1.jpg",
+        lyrics: "Có những nơi không chỉ là địa điểm, mà là nơi có người mình muốn ở cạnh."
+      },
+      {
+        title: "Yêu 5",
+        artist: "Playlist của Duy & Thẻo",
+        src: "assets/music/yeu-5.mp3",
+        cover: "assets/images/anh4.jpg",
+        lyrics: "Yêu là khi từng khoảnh khắc bình thường cũng bỗng hóa thành điều đáng nhớ."
+      },
+      {
+        title: "3107-3",
+        artist: "Playlist của Duy & Thẻo",
+        src: "assets/music/3107-3.mp3",
+        cover: "assets/images/anh5.jpg",
+        lyrics: "Nếu sau này nhìn lại, anh chỉ mong mình vẫn mỉm cười vì đã từng có nhau."
+      }
+    ];
+
+    /* ===============================
+       LOADER
+    =============================== */
+    const loader = document.getElementById("loader");
+    const loaderFill = document.getElementById("loaderFill");
+    const loaderPercent = document.getElementById("loaderPercent");
+
+    let loadVal = 0;
+    const loadTimer = setInterval(() => {
+      loadVal += Math.floor(Math.random() * 8) + 3;
+      if (loadVal > 100) loadVal = 100;
+      loaderFill.style.width = loadVal + "%";
+      loaderPercent.textContent = loadVal + "%";
+
+      if (loadVal >= 100) {
+        clearInterval(loadTimer);
+        setTimeout(() => {
+          loader.classList.add("loader-hide");
+          launchFireworks(18);
+        }, 450);
+      }
+    }, 120);
+
+    /* ===============================
+       TYPING EFFECT
+    =============================== */
+    const typingEl = document.getElementById("typingText");
+    const typingMessage = "Từ ngày em xuất hiện, những ngày bình thường của anh cũng trở thành kỷ niệm. Đây là nơi anh muốn giữ lại tất cả ảnh, video và những điều đẹp nhất của Anh và Thẻo. ";
+    let typeIndex = 0;
+
+    function typeText() {
+      if (typeIndex < typingMessage.length) {
+        typingEl.innerHTML = typingMessage.slice(0, typeIndex + 1) + '<span class=\"typing-cursor\">|</span>';
+        typeIndex++;
+        setTimeout(typeText, 28);
+      } else {
+        typingEl.innerHTML = typingMessage + '<span class=\"typing-cursor\">|</span>';
+      }
+    }
+    setTimeout(typeText, 900);
+
+    /* ===============================
+       HERO SLIDESHOW
+    =============================== */
+    const heroSlides = document.querySelectorAll(".hero-slide");
+    let heroIndex = 0;
+    setInterval(() => {
+      heroSlides[heroIndex].classList.remove("active");
+      heroIndex = (heroIndex + 1) % heroSlides.length;
+      heroSlides[heroIndex].classList.add("active");
+    }, 3200);
+
+    /* ===============================
+       BG PARTICLES / STARS
+    =============================== */
+    const bgCanvas = document.getElementById("bgCanvas");
+    const bgCtx = bgCanvas.getContext("2d");
+    let w = bgCanvas.width = window.innerWidth;
+    let h = bgCanvas.height = window.innerHeight;
+
+    const stars = Array.from({length: 90}, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 1.8 + 0.3,
+      a: Math.random() * 0.8 + 0.2,
+      s: Math.random() * 0.3 + 0.05
+    }));
+
+    const meteors = Array.from({length: 5}, (_, i) => createMeteor(i * 1800));
+
+    function createMeteor(delay = 0) {
+      return {
+        x: Math.random() * w * 0.8,
+        y: -Math.random() * 200 - delay / 40,
+        len: Math.random() * 90 + 60,
+        speed: Math.random() * 6 + 6,
+        active: true
+      };
+    }
+
+    function resizeAll() {
+      w = bgCanvas.width = window.innerWidth;
+      h = bgCanvas.height = window.innerHeight;
+      fwCanvas.width = window.innerWidth;
+      fwCanvas.height = window.innerHeight;
+      vizCanvas.width = vizCanvas.clientWidth * devicePixelRatio;
+      vizCanvas.height = vizCanvas.clientHeight * devicePixelRatio;
+    }
+    window.addEventListener("resize", resizeAll);
+
+    function animateBg() {
+      bgCtx.clearRect(0, 0, w, h);
+
+      // stars
+      for (const s of stars) {
+        bgCtx.beginPath();
+        bgCtx.fillStyle = `rgba(255,255,255,${s.a})`;
+        bgCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        bgCtx.fill();
+        s.a += (Math.random() - 0.5) * 0.02;
+        if (s.a < 0.15) s.a = 0.15;
+        if (s.a > 0.95) s.a = 0.95;
+      }
+
+      // meteors
+      for (let i = 0; i < meteors.length; i++) {
+        const m = meteors[i];
+        bgCtx.strokeStyle = "rgba(255,255,255,.55)";
+        bgCtx.lineWidth = 1.5;
+        bgCtx.beginPath();
+        bgCtx.moveTo(m.x, m.y);
+        bgCtx.lineTo(m.x - m.len, m.y - m.len * 0.5);
+        bgCtx.stroke();
+
+        m.x += m.speed;
+        m.y += m.speed * 0.55;
+
+        if (m.x > w + 200 || m.y > h + 200) {
+          meteors[i] = createMeteor();
+        }
+      }
+
+      requestAnimationFrame(animateBg);
+    }
+    animateBg();
+
+    /* ===============================
+       CURSOR HEART TRAIL
+    =============================== */
+    let lastTrailTime = 0;
+    document.addEventListener("mousemove", (e) => {
+      const now = Date.now();
+      if (now - lastTrailTime < 40) return;
+      lastTrailTime = now;
+
+      const el = document.createElement("div");
+      const icons = ["💖", "✨", "💕", "💗"];
+      el.textContent = icons[Math.floor(Math.random() * icons.length)];
+      el.style.position = "fixed";
+      el.style.left = e.clientX + "px";
+      el.style.top = e.clientY + "px";
+      el.style.pointerEvents = "none";
+      el.style.zIndex = "150";
+      el.style.fontSize = (Math.random() * 10 + 12) + "px";
+      el.style.transform = "translate(-50%, -50%)";
+      el.style.transition = "all .9s ease";
+      document.body.appendChild(el);
+
+      requestAnimationFrame(() => {
+        el.style.opacity = "0";
+        el.style.transform = `translate(-50%, -50%) translate(${(Math.random()-0.5)*30}px, -30px) scale(1.4)`;
+      });
+
+      setTimeout(() => el.remove(), 900);
+    });
+
+    /* ===============================
+       GALLERY MODAL
+    =============================== */
+    const imageModal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    document.querySelectorAll(".gallery-item").forEach(item => {
+      item.addEventListener("click", () => {
+        modalImage.src = item.dataset.img;
+        imageModal.classList.add("show");
+      });
+    });
+
+    /* ===============================
+       LETTER MODAL
+    =============================== */
+    const letterModal = document.getElementById("letterModal");
+    const openLetterBtn = document.getElementById("openLetterBtn");
+    const openLetterSectionBtn = document.getElementById("openLetterSectionBtn");
+
+    function openLetter() {
+      letterModal.classList.add("show");
+    }
+    openLetterBtn.addEventListener("click", openLetter);
+    openLetterSectionBtn.addEventListener("click", openLetter);
+
+    document.querySelectorAll("[data-close]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.getElementById(btn.dataset.close).classList.remove("show");
+      });
+    });
+
+    [imageModal, letterModal].forEach(modal => {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.remove("show");
+      });
+    });
+
+    /* ===============================
+       3D CAROUSEL PAUSE ON HOVER
+    =============================== */
+    const carousel = document.getElementById("carousel3d");
+    carousel.addEventListener("mouseenter", () => carousel.classList.add("paused"));
+    carousel.addEventListener("mouseleave", () => carousel.classList.remove("paused"));
+
+    /* ===============================
+       REPLAY FLIGHT
+    =============================== */
+    const plane = document.getElementById("plane");
+    document.getElementById("replayFlight").addEventListener("click", () => {
+      plane.style.animation = "none";
+      void plane.offsetWidth;
+      plane.style.animation = "flyPlane 8s ease-in-out infinite";
+    });
+
+    /* ===============================
+       FIREWORKS
+    =============================== */
+    const fwCanvas = document.getElementById("fireworksCanvas");
+    const fwCtx = fwCanvas.getContext("2d");
+    fwCanvas.width = window.innerWidth;
+    fwCanvas.height = window.innerHeight;
+
+    let fireworks = [];
+    let particles = [];
+    let fireworksRunning = false;
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createFirework(x = random(100, fwCanvas.width - 100), y = random(80, fwCanvas.height * 0.45)) {
+      const count = Math.floor(random(30, 55));
+      const hue = Math.floor(random(0, 360));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x, y,
+          angle: (Math.PI * 2 * i) / count,
+          speed: random(1.8, 5.8),
+          radius: random(1.5, 3.2),
+          life: 100,
+          alpha: 1,
+          hue
+        });
+      }
+    }
+
+    function updateFireworks() {
+      fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed + 0.35;
+        p.speed *= 0.985;
+        p.life--;
+        p.alpha = p.life / 100;
+
+        fwCtx.beginPath();
+        fwCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        fwCtx.fillStyle = `hsla(${p.hue}, 100%, 65%, ${p.alpha})`;
+        fwCtx.shadowBlur = 16;
+        fwCtx.shadowColor = `hsla(${p.hue}, 100%, 65%, ${p.alpha})`;
+        fwCtx.fill();
+
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+
+      fwCtx.shadowBlur = 0;
+
+      if (fireworksRunning || particles.length > 0) {
+        requestAnimationFrame(updateFireworks);
+      }
+    }
+
+    function launchFireworks(times = 10) {
+      if (!fireworksRunning) {
+        fireworksRunning = true;
+        updateFireworks();
+      }
+
+      let count = 0;
+      const interval = setInterval(() => {
+        createFirework();
+        count++;
+        if (count >= times) {
+          clearInterval(interval);
+          setTimeout(() => {
+            fireworksRunning = false;
+          }, 1800);
+        }
+      }, 260);
+    }
+
+    document.getElementById("fireBtn").addEventListener("click", () => launchFireworks(12));
+
+    /* ===============================
+       MUSIC PLAYER
+    =============================== */
+    const audio = document.getElementById("audio");
+    const playBtn = document.getElementById("playBtn");
+    const albumPlayBtn = document.getElementById("albumPlayBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const muteBtn = document.getElementById("muteBtn");
+    const progressBar = document.getElementById("progressBar");
+    const progressFill = document.getElementById("progressFill");
+    const currentTimeEl = document.getElementById("currentTime");
+    const durationTimeEl = document.getElementById("durationTime");
+    const trackTitleEl = document.getElementById("trackTitle");
+    const trackArtistEl = document.getElementById("trackArtist");
+    const lyricsBox = document.getElementById("lyricsBox");
+    const playlistEl = document.getElementById("playlist");
+    const albumCover = document.getElementById("albumCover");
+
+    let currentTrack = 0;
+    let audioCtx, analyser, source, dataArray, bufferLength;
+    let audioContextReady = false;
+
+    function formatTime(sec) {
+      if (!isFinite(sec)) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60).toString().padStart(2, "0");
+      return `${m}:${s}`;
+    }
+   function playTrack() {
+  // TẮT NHẠC NỀN TRƯỚC
+  if (bgMusic) {
+    bgMusic.pause();
+  }
+}
+
+    function renderPlaylist() {
+      playlistEl.innerHTML = "";
+      tracks.forEach((track, index) => {
+        const item = document.createElement("div");
+        item.className = "track-item" + (index === currentTrack ? " active" : "");
+        item.innerHTML = `
+          <div class="track-left">
+            <div class="track-name">${track.title}</div>
+            <div class="track-artist">${track.artist}</div>
+          </div>
+          <div style="font-size:12px;color:rgba(255,255,255,.6);font-weight:700;">${index + 1}</div>
+        `;
+        item.addEventListener("click", async () => {
+          currentTrack = index;
+          loadTrack(currentTrack);
+          await playCurrent();
+        });
+        playlistEl.appendChild(item);
+      });
+    }
+
+    function loadTrack(index) {
+      const track = tracks[index];
+      audio.src = track.src;
+      trackTitleEl.textContent = track.title;
+      trackArtistEl.textContent = track.artist;
+      lyricsBox.textContent = track.lyrics;
+      albumCover.src = track.cover;
+      renderPlaylist();
+    }
+
+    async function initAudioContext() {
+      if (audioContextReady) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 128;
+      bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+      source = audioCtx.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+      audioContextReady = true;
+    }
+
+    async function playCurrent() {
+      try {
+        await initAudioContext();
+        if (audioCtx.state === "suspended") {
+          await audioCtx.resume();
+        }
+        await audio.play();
+        playBtn.textContent = "⏸";
+        albumPlayBtn.textContent = "⏸ Pause";
+      } catch (e) {
+        console.log("Trình duyệt chặn autoplay, bấm lại play.");
+      }
+    }
+
+    function pauseCurrent() {
+      audio.pause();
+      playBtn.textContent = "▶";
+      albumPlayBtn.textContent = "▶ Play";
+    }
+
+    playBtn.addEventListener("click", async () => {
+      if (audio.paused) await playCurrent();
+      else pauseCurrent();
+    });
+
+    albumPlayBtn.addEventListener("click", async () => {
+      if (audio.paused) await playCurrent();
+      else pauseCurrent();
+    });
+
+    prevBtn.addEventListener("click", async () => {
+      currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+      loadTrack(currentTrack);
+      await playCurrent();
+    });
+
+    nextBtn.addEventListener("click", async () => {
+      currentTrack = (currentTrack + 1) % tracks.length;
+      loadTrack(currentTrack);
+      await playCurrent();
+    });
+
+    muteBtn.addEventListener("click", () => {
+      audio.muted = !audio.muted;
+      muteBtn.textContent = audio.muted ? "🔇 Đã tắt tiếng" : "🔊 Âm thanh";
+    });
+
+    audio.addEventListener("loadedmetadata", () => {
+      durationTimeEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      const percent = (audio.currentTime / audio.duration) * 100 || 0;
+      progressFill.style.width = percent + "%";
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+    });
+
+    progressBar.addEventListener("click", (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      const ratio = (e.clientX - rect.left) / rect.width;
+      audio.currentTime = ratio * audio.duration;
+    });
+
+    audio.addEventListener("ended", async () => {
+      currentTrack = (currentTrack + 1) % tracks.length;
+      loadTrack(currentTrack);
+      await playCurrent();
+    });
+
+    loadTrack(currentTrack);
+
+    /* ===============================
+       VISUALIZER
+    =============================== */
+    const vizCanvas = document.getElementById("visualizerCanvas");
+    const vizCtx = vizCanvas.getContext("2d");
+
+    function drawVisualizer() {
+      const width = vizCanvas.width;
+      const height = vizCanvas.height;
+      vizCtx.clearRect(0, 0, width, height);
+
+      // bg glow
+      const grd = vizCtx.createLinearGradient(0, 0, width, 0);
+      grd.addColorStop(0, "rgba(255,79,163,.25)");
+      grd.addColorStop(.5, "rgba(255,210,122,.18)");
+      grd.addColorStop(1, "rgba(140,107,255,.22)");
+      vizCtx.fillStyle = grd;
+      vizCtx.fillRect(0, 0, width, height);
+
+      if (analyser && !audio.paused) {
+        analyser.getByteFrequencyData(dataArray);
+      }
+
+      const barWidth = width / (bufferLength || 64);
+      for (let i = 0; i < (bufferLength || 64); i++) {
+        const val = analyser ? dataArray[i] : (Math.sin((Date.now()/180) + i) * 40 + 50);
+        const barHeight = (val / 255) * (height * 0.9);
+
+        const x = i * barWidth;
+        const y = height - barHeight;
+
+        const g = vizCtx.createLinearGradient(0, y, 0, height);
+        g.addColorStop(0, "rgba(255,79,163,.95)");
+        g.addColorStop(.6, "rgba(255,210,122,.88)");
+        g.addColorStop(1, "rgba(140,107,255,.9)");
+
+        vizCtx.fillStyle = g;
+        vizCtx.fillRect(x + 2, y, Math.max(barWidth - 4, 3), barHeight);
+      }
+
+      requestAnimationFrame(drawVisualizer);
+    }
+    resizeAll();
+    drawVisualizer();
+
+    /* ===============================
+       SCROLL TOP
+    =============================== */
+    document.getElementById("scrollTopBtn").addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    /* ===============================
+       SMALL ENHANCEMENT
+    =============================== */
+    // Pause all other videos when one starts
+    const allVideos = document.querySelectorAll("video");
+    allVideos.forEach(v => {
+      v.addEventListener("play", () => {
+        allVideos.forEach(other => {
+          if (other !== v) other.pause();
+        });
+      });
+    });
+  </script>
+  <audio id="bgMusic" autoplay muted loop playsinline>
+  <source src="assets/music/nhac-nen.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+
+  let isPlaying = false;
+
+  function playTrack() {
+    if (bgMusic) {
+      bgMusic.pause();
+    }
+
+    audio.play().then(() => {
+      isPlaying = true;
+      playBtn.textContent = "⏸";
+      albumPlayBtn.textContent = "⏸ Pause";
+    }).catch(err => {
+      console.log(err);
+    });
+  }
+
+  function pauseTrack() {
+    audio.pause();
+    isPlaying = false;
+    playBtn.textContent = "▶";
+    albumPlayBtn.textContent = "▶ Play";
+
+    if (bgMusic) {
+      bgMusic.muted = false;
+      bgMusic.play().catch(() => {});
+    }
+  }
+
+  function togglePlay() {
+    if (isPlaying) {
+      pauseTrack();
+    } else {
+      playTrack();
+    }
+  }
+
+  playBtn.addEventListener("click", togglePlay);
+  albumPlayBtn.addEventListener("click", togglePlay);
+
+  document.addEventListener("click", function firstUnlock() {
+    if (bgMusic) {
+      bgMusic.muted = false;
+      bgMusic.play().catch(() => {});
+    }
+    document.removeEventListener("click", firstUnlock);
+  });
+</script>
+</body>
+</html>
